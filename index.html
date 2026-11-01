@@ -161,6 +161,30 @@
   .del:hover { color: var(--bad); }
   .footer { text-align: center; font-size: 12px; color: var(--muted); }
 
+  /* 운동 탭 */
+  .tabs { position: sticky; top: 8px; z-index: 5; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; padding: 8px; background: var(--panel); border: 1px solid var(--line); border-radius: 18px; box-shadow: var(--shadow); }
+  .tab { --accent: var(--orange); border: 2px solid transparent; border-radius: 14px; padding: 14px 6px; background: color-mix(in srgb, var(--accent) 8%, var(--bg)); cursor: pointer; font-weight: 700; font-size: 16px; color: var(--muted); display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 0; }
+  .tab .ti { font-size: 24px; line-height: 1.1; }
+  .tab .tn { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+  .tab:hover { border-color: color-mix(in srgb, var(--accent) 40%, transparent); }
+  .tab[aria-selected="true"] { background: var(--accent); border-color: var(--accent); color: var(--on-accent); box-shadow: 0 6px 16px color-mix(in srgb, var(--accent) 35%, transparent); }
+  #app[data-tab="jog"] [data-t]:not([data-t="jog"]),
+  #app[data-tab="stairs"] [data-t]:not([data-t="stairs"]),
+  #app[data-tab="strength"] [data-t]:not([data-t="strength"]) { display: none !important; }
+
+  /* 운동 패널 */
+  .ex { display: flex; flex-direction: column; gap: 0; }
+  .ex .tabs { border-radius: 18px 18px 0 0; border-bottom: 0; box-shadow: none; }
+  .panel { --accent: var(--orange); background: var(--panel); border: 1px solid var(--line); border-top: 4px solid var(--accent); border-radius: 0 0 18px 18px; padding: 18px; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 22px; min-width: 0; }
+  .ex-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+  .ex-head h2 { display: flex; align-items: center; gap: 8px; margin: 0; font-size: 22px; }
+  .ex-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 130px), 1fr)); gap: 10px; }
+  .ex-stat { padding: 12px 14px; border-radius: 12px; background: color-mix(in srgb, var(--accent) 12%, var(--bg)); min-width: 0; }
+  .ex-stat .big { font-size: 24px; margin-top: 2px; }
+  .subhead { margin: 0 0 8px; font-size: 16px; display: flex; align-items: center; gap: 6px; }
+  .sec-title { margin: 12px 0 -6px; font-size: 18px; display: flex; align-items: center; gap: 8px; color: var(--muted); }
+  .panel th { color: var(--accent); }
+
   /* 상단 배너: 파스텔 */
   .hero { color: #3a2f55; background: linear-gradient(130deg, #ffd6e0 0%, #ffe6cc 35%, #e6dcff 70%, #cfe6ff 100%); box-shadow: 0 10px 28px rgba(150, 130, 200, .22); }
   .hero::before, .hero::after { background: rgba(255, 255, 255, .45); }
@@ -196,19 +220,26 @@
 
   <div class="status" id="status">기록을 불러오는 중이에요…</div>
 
-  <section class="tiles">
-    <div class="tile c-violet"><div class="lbl-row"><span class="ico">⚖️</span>시작 체중</div><div class="big"><span id="tStart">—</span><span class="unit">kg</span></div><div class="sub">2026.10.31</div></div>
-    <div class="tile c-blue"><div class="lbl-row"><span class="ico">🎯</span>현재 체중</div><div class="big"><span id="tCurrent">—</span><span class="unit">kg</span></div><div class="sub"><span id="tLastDate">—</span> 측정</div></div>
-    <div class="tile c-teal"><div class="lbl-row"><span class="ico">📉</span>시작 대비</div><div class="big"><span id="tChange">—</span><span class="unit">kg</span></div><div class="sub">체중 기록 <span id="tRecords">—</span>회</div></div>
-    <div class="tile c-orange"><div class="lbl-row"><span class="ico">🏃</span>이날 조깅</div><div class="big"><span id="tJog">—</span><span class="unit">km</span></div><div class="sub tDay">—</div></div>
-    <div class="tile c-pink"><div class="lbl-row"><span class="ico">🪜</span>이날 천국의계단</div><div class="big"><span id="tStairs">—</span><span class="unit">분</span></div><div class="sub tDay">—</div></div>
-    <div class="tile c-yellow"><div class="lbl-row"><span class="ico">💪</span>이날 근력운동</div><div class="big"><span id="tStrength">—</span><span class="unit">개</span></div><div class="sub tDay">—</div></div>
-    <div class="tile c-red"><div class="lbl-row"><span class="ico">🍺</span>이번 달 음주</div><div class="big"><span id="tDrinkMonth">—</span><span class="unit">회</span></div><div class="sub">월별 횟수는 아래 그래프에 있어요</div></div>
-  </section>
+  <section class="ex" aria-label="운동별 기록">
+    <nav class="tabs" role="tablist" aria-label="운동 종류">
+      <button class="tab" role="tab" data-tab="jog" style="--accent: var(--orange)" aria-selected="true"><span class="ti">🏃</span><span class="tn">조깅</span></button>
+      <button class="tab" role="tab" data-tab="stairs" style="--accent: var(--pink)" aria-selected="false"><span class="ti">🪜</span><span class="tn">천국의계단</span></button>
+      <button class="tab" role="tab" data-tab="strength" style="--accent: var(--yellow)" aria-selected="false"><span class="ti">💪</span><span class="tn">근력운동</span></button>
+    </nav>
+    <div class="panel" id="panel" role="tabpanel">
+      <div class="ex-head"><h2><span class="ico" id="exIco">🏃</span><span id="exName">조깅</span></h2><span class="sub" id="exUnit">단위: km</span></div>
 
-  <section class="card c-orange" id="workout">
-    <h2><span class="ico">🏃</span>운동 기록</h2>
-    <p class="note editor">운동할 때마다 양을 넣고 ‘추가’를 누르세요. 같은 날 여러 번 추가하면 그날 운동량에 더해져요.</p>
+      <div class="ex-stats">
+        <div class="ex-stat"><div class="lbl-row">이날</div><div class="big"><span id="xDay">—</span><span class="unit xU">km</span></div><div class="sub tDay">—</div></div>
+        <div class="ex-stat"><div class="lbl-row">이번 주</div><div class="big"><span id="xWeek">—</span><span class="unit xU">km</span></div></div>
+        <div class="ex-stat"><div class="lbl-row">이번 달</div><div class="big"><span id="xMonth">—</span><span class="unit xU">km</span></div></div>
+        <div class="ex-stat"><div class="lbl-row">시즌3 누적</div><div class="big"><span id="xTotal">—</span><span class="unit xU">km</span></div></div>
+        <div class="ex-stat"><div class="lbl-row">한 날</div><div class="big"><span id="xDays">—</span><span class="unit">일</span></div></div>
+      </div>
+
+      <div id="workout">
+        <h3 class="subhead">✏️ 기록하기</h3>
+        <p class="note editor">운동할 때마다 양을 넣고 ‘추가’를 누르세요. 같은 날 여러 번 추가하면 그날 운동량에 더해져요.</p>
     <div class="wo-date">
       <input type="date" id="woDate" aria-label="운동 날짜">
       <button class="chip" data-shift="-1">◀ 전날</button>
@@ -221,21 +252,21 @@
       </span>
     </div>
     <div class="wo-types">
-      <div class="wo" data-type="jog" style="--accent: var(--orange)">
+      <div class="wo" data-type="jog" data-t="jog" style="--accent: var(--orange)">
         <div class="wo-head"><span class="wo-name"><span class="ico">🏃</span>조깅</span><span class="wo-today">이날 <b data-total="jog">0</b> km</span></div>
         <div class="editor">
           <div class="wo-row"><input type="number" id="inJog" step="0.1" min="0" placeholder="km 입력 (예: 3.5)" aria-label="조깅 km"><button class="add">+ 추가</button></div>
           <div class="wo-quick"><button data-q="1">+1km</button><button data-q="3">+3km</button><button data-q="5">+5km</button></div>
         </div>
       </div>
-      <div class="wo" data-type="stairs" style="--accent: var(--pink)">
+      <div class="wo" data-type="stairs" data-t="stairs" style="--accent: var(--pink)">
         <div class="wo-head"><span class="wo-name"><span class="ico">🪜</span>천국의계단</span><span class="wo-today">이날 <b data-total="stairs">0</b> 분</span></div>
         <div class="editor">
           <div class="wo-row"><input type="number" id="inStairs" step="1" min="0" placeholder="분 입력 (예: 20)" aria-label="천국의계단 분"><button class="add">+ 추가</button></div>
           <div class="wo-quick"><button data-q="10">+10분</button><button data-q="20">+20분</button><button data-q="30">+30분</button></div>
         </div>
       </div>
-      <div class="wo" data-type="strength" style="--accent: var(--yellow)">
+      <div class="wo" data-type="strength" data-t="strength" style="--accent: var(--yellow)">
         <div class="wo-head"><span class="wo-name"><span class="ico">💪</span>근력운동</span><span class="wo-today">이날 <b data-total="strength">0</b> 개</span></div>
         <div class="editor">
           <div class="wo-row"><input type="number" id="inStrength" step="1" min="0" placeholder="개수 입력 (예: 50)" aria-label="근력운동 개수"><button class="add">+ 추가</button></div>
@@ -243,12 +274,83 @@
         </div>
       </div>
     </div>
-    <div class="sessions" id="sessions"></div>
-    <div class="toast" id="woToast"></div>
+        <div class="sessions" id="sessions"></div>
+        <div class="toast" id="woToast"></div>
+      </div>
+
+      <div id="daily">
+        <h3 class="subhead">📊 일자별 운동량 <span class="sub">최근 14일</span></h3>
+        <div class="chart" id="cEx"></div>
+      </div>
+
+      <div id="calendar">
+        <h3 class="subhead">📅 운동 달력 <span class="sub">날짜를 누르면 그날로 이동</span></h3>
+        <div class="cal-head"><button class="cal-nav" id="calPrev" aria-label="이전 달">◀</button><b id="calTitle"></b><button class="cal-nav" id="calNext" aria-label="다음 달">▶</button></div>
+        <div class="cal" id="cal"></div>
+      </div>
+
+      <div>
+        <h3 class="subhead">📋 기록 목록</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>날짜</th><th id="exCol">거리</th><th>추가 횟수</th></tr></thead>
+            <tbody id="exRows"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
   </section>
 
+  <h2 class="sec-title">⚖️ 체중 · 음주</h2>
+
+  <section class="tiles">
+    <div class="tile c-violet"><div class="lbl-row"><span class="ico">⚖️</span>시작 체중</div><div class="big"><span id="tStart">—</span><span class="unit">kg</span></div><div class="sub">2026.10.31</div></div>
+    <div class="tile c-blue"><div class="lbl-row"><span class="ico">🎯</span>현재 체중</div><div class="big"><span id="tCurrent">—</span><span class="unit">kg</span></div><div class="sub"><span id="tLastDate">—</span> 측정</div></div>
+    <div class="tile c-teal"><div class="lbl-row"><span class="ico">📉</span>시작 대비</div><div class="big"><span id="tChange">—</span><span class="unit">kg</span></div><div class="sub">체중 기록 <span id="tRecords">—</span>회</div></div>
+    <div class="tile c-red"><div class="lbl-row"><span class="ico">🍺</span>이번 달 음주</div><div class="big"><span id="tDrinkMonth">—</span><span class="unit">회</span></div><div class="sub">월별 횟수는 아래 그래프에 있어요</div></div>
+  </section>
+
+  <div class="grid2">
+    <section class="card c-blue editor" id="weightEntry">
+      <h2><span class="ico">⚖️</span>체중 · 음주 기록하기</h2>
+      <p class="note">체중계 숫자와 음주 여부를 날짜별로 저장해요</p>
+      <div class="form">
+        <div class="field"><label for="fDate">날짜</label><input type="date" id="fDate"></div>
+        <div class="field"><label for="fWeight">⚖️ 체중 (kg)</label><input type="number" id="fWeight" step="0.01" min="30" max="200" placeholder="예: 85.40"></div>
+        <div class="field"><label>🍺 음주</label><label class="check"><input type="checkbox" id="fDrink">오늘도 술</label></div>
+        <div class="field"><label for="fNote">메모</label><input type="text" id="fNote" maxlength="60" placeholder="예: 회식"></div>
+      </div>
+      <div class="btns"><button class="btn btn-main" id="saveBtn">저장하기</button></div>
+      <div class="toast" id="toast"></div>
+    </section>
+    <section class="card c-red" id="drinking">
+      <h2><span class="ico">🍺</span>월별 음주 횟수</h2>
+      <p class="note">2026년 10월부터 달마다 마신 날 수</p>
+      <div class="chart" id="drinkChart" style="min-height:200px"></div>
+    </section>
+  </div>
+
+  <section class="card c-violet" id="trend">
+    <h2><span class="ico">📈</span>체중 추이</h2>
+    <p class="note">날짜별 체중 · 점선은 시작 체중(86.10 kg)</p>
+    <div class="chart" id="weightChart" style="min-height:240px"></div>
+  </section>
+
+  <section class="card c-blue" id="records">
+    <h2><span class="ico">📋</span>체중 · 음주 기록</h2>
+    <p class="note">줄을 누르면 그날로 이동해요</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>날짜</th><th>체중</th><th>음주</th><th>메모</th></tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <h2 class="sec-title">✅ 운동일</h2>
+
   <section class="card c-teal" id="attendance">
-    <h2><span class="ico">✅</span>운동일 관리</h2>
+    <h2><span class="ico">✅</span>운동일 관리 (전체 운동)</h2>
     <p class="note">운동을 추가한 날은 자동으로 ‘운동함’이 돼요. 쉬는 날은 💤 휴식일, 할 날은 📌 운동 계획으로 표시해 두세요.</p>
     <div class="att-stats">
       <div class="att-stat"><div class="lbl-row">이번 주 운동일</div><div class="big"><span id="aWeek">—</span><span class="unit">/ 7일</span></div></div>
@@ -265,61 +367,6 @@
       </table>
     </div>
   </section>
-
-  <section class="card c-orange" id="daily">
-    <h2><span class="ico">📊</span>일자별 운동량</h2>
-    <p class="note">최근 14일 · 막대에 마우스를 올리면 그날 운동량이 보여요</p>
-    <div class="grid3">
-      <div class="mini"><h3>🏃 조깅 (km)</h3><div class="chart" id="cJog"></div></div>
-      <div class="mini"><h3>🪜 천국의계단 (분)</h3><div class="chart" id="cStairs"></div></div>
-      <div class="mini"><h3>💪 근력운동 (개)</h3><div class="chart" id="cStrength"></div></div>
-    </div>
-  </section>
-
-  <div class="grid2">
-    <section class="card c-violet" id="calendar">
-      <h2><span class="ico">📅</span>운동 달력</h2>
-      <p class="note">날짜를 누르면 그날 운동을 볼 수 있어요</p>
-      <div class="cal-head"><button class="cal-nav" id="calPrev" aria-label="이전 달">◀</button><b id="calTitle"></b><button class="cal-nav" id="calNext" aria-label="다음 달">▶</button></div>
-      <div class="cal" id="cal"></div>
-    </section>
-    <section class="card c-blue editor" id="weightEntry">
-      <h2><span class="ico">⚖️</span>체중 · 음주 기록하기</h2>
-      <p class="note">체중계 숫자와 음주 여부를 날짜별로 저장해요</p>
-      <div class="form">
-        <div class="field"><label for="fDate">날짜</label><input type="date" id="fDate"></div>
-        <div class="field"><label for="fWeight">⚖️ 체중 (kg)</label><input type="number" id="fWeight" step="0.01" min="30" max="200" placeholder="예: 85.40"></div>
-        <div class="field"><label>🍺 음주</label><label class="check"><input type="checkbox" id="fDrink">오늘도 술</label></div>
-        <div class="field"><label for="fNote">메모</label><input type="text" id="fNote" maxlength="60" placeholder="예: 회식"></div>
-      </div>
-      <div class="btns"><button class="btn btn-main" id="saveBtn">저장하기</button></div>
-      <div class="toast" id="toast"></div>
-    </section>
-  </div>
-
-  <section class="card c-violet" id="trend">
-    <h2><span class="ico">📈</span>체중 추이</h2>
-    <p class="note">날짜별 체중 · 점선은 시작 체중(86.10 kg)</p>
-    <div class="chart" id="weightChart" style="min-height:240px"></div>
-  </section>
-
-  <div class="grid2">
-    <section class="card c-red" id="drinking">
-      <h2><span class="ico">🍺</span>월별 음주 횟수</h2>
-      <p class="note">2026년 10월부터 달마다 마신 날 수</p>
-      <div class="chart" id="drinkChart" style="min-height:200px"></div>
-    </section>
-    <section class="card c-blue" id="records">
-      <h2><span class="ico">📋</span>일자별 전체 기록</h2>
-      <p class="note">줄을 누르면 그날로 이동해요</p>
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>날짜</th><th>체중</th><th>조깅</th><th>계단</th><th>근력</th><th>음주</th></tr></thead>
-          <tbody id="rows"></tbody>
-        </table>
-      </div>
-    </section>
-  </div>
 
   <div class="btns" style="justify-content:center">
     <button class="btn btn-ghost" id="exportBtn">백업 파일 받기</button>
@@ -339,6 +386,26 @@ const TYPES = {
   strength: { name: '근력운동', unit: '개', icon: '💪', color: '#f59f00' },
 };
 const $ = (id) => document.getElementById(id);
+
+// ---------- 운동 탭 ----------
+let tab = 'jog';
+try { const saved = localStorage.getItem('ymTab'); if (TYPES[saved]) tab = saved; } catch (e) {}
+function applyTab() {
+  $('app').dataset.tab = tab;
+  document.querySelectorAll('.tab').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.tab === tab)));
+  $('exIco').textContent = TYPES[tab].icon; $('exName').textContent = TYPES[tab].name;
+  $('exUnit').textContent = '단위: ' + TYPES[tab].unit;
+  $('exCol').textContent = { jog: '거리', stairs: '시간', strength: '개수' }[tab];
+  document.querySelectorAll('.xU').forEach((e) => { e.textContent = TYPES[tab].unit; });
+  $('panel').style.setProperty('--accent', TYPES[tab].color);
+}
+function setTab(k) {
+  if (!TYPES[k]) return;
+  tab = k; try { localStorage.setItem('ymTab', k); } catch (e) {}
+  applyTab(); renderWorkoutDay(); renderCalendar(); renderDaily(); renderExStats(); renderExTable();
+}
+document.querySelectorAll('.tab').forEach((b) => b.addEventListener('click', () => setTab(b.dataset.tab)));
+applyTab();
 
 // ---------- 날짜 ----------
 const ymd = (d) => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
@@ -390,8 +457,6 @@ function renderTiles() {
   const thisMon = mondayOf(todayStr());
   let weekDays = 0; for (let i = 0; i < 7; i++) if (dayStatus(shift(thisMon, i)) === 'done') weekDays++;
   set('tRecords', w.length); set('takeDays', weekDays);
-  const dt = dayTotals(woDate);
-  set('tJog', dt.jog, fmtN); set('tStairs', dt.stairs, fmtN); set('tStrength', dt.strength, fmtN);
   document.querySelectorAll('.tDay').forEach((e) => { e.textContent = label(woDate) + (woDate === todayStr() ? ' · 오늘' : ''); });
   set('tDrinkMonth', drinkDays.filter(([d]) => d.slice(0, 7) === month).length);
 }
@@ -407,7 +472,32 @@ function setWoDate(d) {
   if (typeof mondayOf === 'function') wkStart = mondayOf(d);
   renderWorkoutDay(); renderCalendar(); renderDaily();
   if (typeof renderAttend === 'function') { renderAttend(); renderStatusButtons(); }
-  renderTiles();
+  renderTiles(); renderExStats(); renderExTable();
+}
+
+// ---------- 운동별 요약 · 목록 ----------
+function sumRange(type, from, to) {
+  return Math.round(state.sessions.filter((s) => s.type === type && s.date >= from && s.date <= to).reduce((a, s) => a + (Number(s.amount) || 0), 0) * 10) / 10;
+}
+function renderExStats() {
+  const today = todayStr(), mon = mondayOf(today), month = today.slice(0, 7);
+  $('xDay').textContent = fmtN(dayTotals(woDate)[tab]);
+  $('xWeek').textContent = fmtN(sumRange(tab, mon, shift(mon, 6)));
+  $('xMonth').textContent = fmtN(sumRange(tab, month + '-01', month + '-31'));
+  $('xTotal').textContent = fmtN(sumRange(tab, START_DATE, '9999-12-31'));
+  $('xDays').textContent = new Set(state.sessions.filter((s) => s.type === tab).map((s) => s.date)).size;
+}
+function renderExTable() {
+  const tb = $('exRows'); tb.replaceChildren();
+  const dates = [...new Set(state.sessions.filter((s) => s.type === tab && isDate(s.date)).map((s) => s.date))].sort().reverse();
+  if (!dates.length) { const tr = document.createElement('tr'); const td = document.createElement('td'); td.colSpan = 3; td.className = 'empty'; td.textContent = state.loaded.sessions ? '아직 ' + TYPES[tab].name + ' 기록이 없어요.' : '불러오는 중…'; tr.appendChild(td); tb.appendChild(tr); return; }
+  dates.forEach((d) => {
+    const n = state.sessions.filter((s) => s.type === tab && s.date === d).length;
+    const tr = document.createElement('tr'); tr.className = 'click';
+    [dot(d) + ' (' + WD[parse(d).getDay()] + ')', fmtN(dayTotals(d)[tab]) + TYPES[tab].unit, n + '회'].forEach((v) => { const td = document.createElement('td'); td.textContent = v; tr.appendChild(td); });
+    tr.addEventListener('click', () => { setWoDate(d); loadDayForm(d); $('panel').scrollIntoView({ behavior: 'smooth' }); });
+    tb.appendChild(tr);
+  });
 }
 function stamp() { const n = new Date(); return String(n.getHours()).padStart(2, '0') + ':' + String(n.getMinutes()).padStart(2, '0'); }
 function writeFailed(e, toastId) {
@@ -430,8 +520,8 @@ function renderWorkoutDay() {
   const t = dayTotals(woDate);
   document.querySelectorAll('[data-total]').forEach((b) => { b.textContent = fmtN(t[b.dataset.total]); });
   const box = $('sessions'); box.replaceChildren();
-  const list = state.sessions.filter((s) => s.date === woDate && TYPES[s.type]).sort((a, b) => String(a.at).localeCompare(String(b.at)));
-  if (!list.length) { const p = document.createElement('div'); p.className = 'sub'; p.textContent = state.loaded.sessions ? '이날은 아직 운동 기록이 없어요.' : '불러오는 중…'; box.appendChild(p); return; }
+  const list = state.sessions.filter((s) => s.date === woDate && s.type === tab).sort((a, b) => String(a.at).localeCompare(String(b.at)));
+  if (!list.length) { const p = document.createElement('div'); p.className = 'sub'; p.textContent = state.loaded.sessions ? '이날은 아직 ' + TYPES[tab].name + ' 기록이 없어요.' : '불러오는 중…'; box.appendChild(p); return; }
   list.forEach((s) => {
     const row = document.createElement('div'); row.className = 'session';
     const d = document.createElement('span'); d.className = 'dot'; d.style.background = TYPES[s.type].color;
@@ -572,13 +662,13 @@ function renderCalendar() {
     const t = dayTotals(ds), info = state.days[ds] || {};
     const b = document.createElement('button'); b.className = 'day';
     if (ds < START_DATE) b.classList.add('out');
-    if (t.count) b.classList.add('has');
+    if (t[tab]) b.classList.add('has');
     if (ds === woDate) b.classList.add('sel');
     const mark = info.status === 'rest' && !t.count ? ' 💤' : info.status === 'plan' && !t.count ? ' 📌' : '';
     const n = document.createElement('span'); n.className = 'n'; n.textContent = d + mark + (info.drink ? ' 🍺' : '');
     b.appendChild(n);
     Object.keys(TYPES).forEach((k) => {
-      if (!t[k]) return;
+      if (k !== tab || !t[k]) return;
       const s = document.createElement('span'); s.className = 'm'; s.style.color = TYPES[k].color;
       s.textContent = TYPES[k].icon + fmtN(t[k]) + TYPES[k].unit; b.appendChild(s);
     });
@@ -630,7 +720,7 @@ function renderDailyBars(boxId, type) {
   });
   attachTip(box, svg, W, items);
 }
-function renderDaily() { renderDailyBars('cJog', 'jog'); renderDailyBars('cStairs', 'stairs'); renderDailyBars('cStrength', 'strength'); }
+function renderDaily() { renderDailyBars('cEx', tab); }
 
 function renderWeightChart() {
   const box = $('weightChart'); box.replaceChildren();
@@ -689,14 +779,14 @@ function renderDrinkChart() {
 
 function renderTable() {
   const tb = $('rows'); tb.replaceChildren();
-  const dates = allDates().reverse();
-  if (!dates.length) { const tr = document.createElement('tr'); const td = document.createElement('td'); td.colSpan = 6; td.className = 'empty'; td.textContent = state.loaded.days ? '아직 기록이 없어요.' : '불러오는 중…'; tr.appendChild(td); tb.appendChild(tr); return; }
+  const dates = Object.keys(state.days).filter(isDate).filter((d) => { const v = state.days[d] || {}; return v.weight != null || v.drink || v.note; }).sort().reverse();
+  if (!dates.length) { const tr = document.createElement('tr'); const td = document.createElement('td'); td.colSpan = 4; td.className = 'empty'; td.textContent = state.loaded.days ? '아직 기록이 없어요.' : '불러오는 중…'; tr.appendChild(td); tb.appendChild(tr); return; }
   dates.forEach((d) => {
     const t = dayTotals(d), info = state.days[d] || {};
     const tr = document.createElement('tr'); tr.className = 'click';
-    [dot(d), info.weight != null ? fmt2(info.weight) : '—', t.jog ? fmtN(t.jog) + 'km' : '—', t.stairs ? fmtN(t.stairs) + '분' : '—', t.strength ? fmtN(t.strength) + '개' : '—', info.drink ? '🍺' : '—']
+    [dot(d), info.weight != null ? fmt2(info.weight) : '—', info.drink ? '🍺' : '—', info.note || '—']
       .forEach((v) => { const td = document.createElement('td'); td.textContent = v; tr.appendChild(td); });
-    tr.addEventListener('click', () => { setWoDate(d); loadDayForm(d); $('workout').scrollIntoView({ behavior: 'smooth' }); });
+    tr.addEventListener('click', () => { setWoDate(d); loadDayForm(d); $('weightEntry').scrollIntoView({ behavior: 'smooth' }); });
     tb.appendChild(tr);
   });
 }
@@ -736,7 +826,7 @@ $('saveBtn').addEventListener('click', async () => {
 // ---------- 화면 ----------
 function setReadOnly(ro) { state.canWrite = !ro; $('app').classList.toggle('readonly', ro); }
 function renderAll() {
-  renderTiles(); renderWorkoutDay(); renderAttend(); renderStatusButtons(); renderCalendar(); renderTable(); renderDaily(); renderWeightChart(); renderDrinkChart();
+  renderTiles(); renderExStats(); renderExTable(); renderWorkoutDay(); renderAttend(); renderStatusButtons(); renderCalendar(); renderTable(); renderDaily(); renderWeightChart(); renderDrinkChart();
   if (!formDirty && document.activeElement?.closest?.('#weightEntry') == null) loadDayForm($('fDate').value || woDate);
 }
 let rt; window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => { renderDaily(); renderWeightChart(); renderDrinkChart(); }, 150); });
