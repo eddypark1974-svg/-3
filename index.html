@@ -131,6 +131,14 @@
   .pill.rest { background: color-mix(in srgb, var(--blue) 16%, var(--panel)); }
   .pill.plan { background: color-mix(in srgb, var(--yellow) 22%, var(--panel)); }
 
+  /* 체중 버튼: 누르면 체중 입력으로 이동 */
+  .go { cursor: pointer; transition: transform .15s ease, box-shadow .15s ease; }
+  .go:hover { transform: translateY(-2px); }
+  .go:focus-visible { outline: 2px solid var(--violet); outline-offset: 3px; }
+  .tile.go::after { content: '체중 입력 ›'; display: block; margin-top: 6px; font-size: 11px; color: var(--accent); }
+  .badge.go::after { content: '눌러서 체중 입력 ›'; display: block; margin-top: 2px; font-size: 11px; opacity: .85; }
+  .wt-box.flash { outline: 3px solid var(--blue); outline-offset: 3px; }
+
   /* 일자별 체중 */
   .wt-box { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; padding: 12px 14px; border-radius: 14px; background: color-mix(in srgb, var(--blue) 10%, var(--panel)); border: 1px solid color-mix(in srgb, var(--blue) 28%, var(--line)); }
   .wt-now b { font-size: 26px; font-variant-numeric: tabular-nums; }
@@ -222,7 +230,7 @@
       <h1>용민혁명 시즌3</h1>
       <p class="take">2026.10.31 시작 · 시작 대비 <b id="takeChange">—</b> kg · 이번 주 운동 <b id="takeDays">—</b>일</p>
     </div>
-    <div class="badge">
+    <div class="badge go" data-goto="weightDay" role="button" tabindex="0" aria-label="현재 체중, 누르면 체중 입력으로 이동">
       <div class="lbl">현재 체중</div>
       <div class="num"><span id="heroCurrent">—</span><small>kg</small></div>
     </div>
@@ -314,9 +322,9 @@
   <h2 class="sec-title">⚖️ 체중 · 음주</h2>
 
   <section class="tiles">
-    <div class="tile c-violet"><div class="lbl-row"><span class="ico">⚖️</span>시작 체중</div><div class="big"><span id="tStart">—</span><span class="unit">kg</span></div><div class="sub">2026.10.31</div></div>
-    <div class="tile c-blue"><div class="lbl-row"><span class="ico">🎯</span>현재 체중</div><div class="big"><span id="tCurrent">—</span><span class="unit">kg</span></div><div class="sub"><span id="tLastDate">—</span> 측정</div></div>
-    <div class="tile c-teal"><div class="lbl-row"><span class="ico">📉</span>시작 대비</div><div class="big"><span id="tChange">—</span><span class="unit">kg</span></div><div class="sub">체중 기록 <span id="tRecords">—</span>회</div></div>
+    <div class="tile c-violet go" data-goto="weightDay" role="button" tabindex="0" aria-label="시작 체중, 누르면 체중 입력으로 이동"><div class="lbl-row"><span class="ico">⚖️</span>시작 체중</div><div class="big"><span id="tStart">—</span><span class="unit">kg</span></div><div class="sub">2026.10.31</div></div>
+    <div class="tile c-blue go" data-goto="weightDay" role="button" tabindex="0" aria-label="현재 체중, 누르면 체중 입력으로 이동"><div class="lbl-row"><span class="ico">🎯</span>현재 체중</div><div class="big"><span id="tCurrent">—</span><span class="unit">kg</span></div><div class="sub"><span id="tLastDate">—</span> 측정</div></div>
+    <div class="tile c-teal go" data-goto="weightDay" role="button" tabindex="0" aria-label="시작 대비, 누르면 체중 입력으로 이동"><div class="lbl-row"><span class="ico">📉</span>시작 대비</div><div class="big"><span id="tChange">—</span><span class="unit">kg</span></div><div class="sub">체중 기록 <span id="tRecords">—</span>회</div></div>
     <div class="tile c-red"><div class="lbl-row"><span class="ico">🍺</span>이번 달 음주</div><div class="big"><span id="tDrinkMonth">—</span><span class="unit">회</span></div><div class="sub">월별 횟수는 아래 그래프에 있어요</div></div>
   </section>
 
@@ -900,6 +908,19 @@ async function clearWeight() {
 $('addWeight').addEventListener('click', saveWeight);
 $('clearWeight').addEventListener('click', clearWeight);
 $('inWeight').addEventListener('keydown', (e) => { if (e.key === 'Enter') saveWeight(); });
+
+// ---------- 체중 버튼 → 체중 입력으로 이동 ----------
+function goToWeight() {
+  if (woDate !== todayStr() && todayStr() >= START_DATE) setWoDate(todayStr());
+  const target = $('weightDay'), box = target.querySelector('.wt-box');
+  target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  box.classList.add('flash'); setTimeout(() => box.classList.remove('flash'), 1500);
+  setTimeout(() => { const i = $('inWeight'); if (i && i.offsetParent !== null) { i.focus({ preventScroll: true }); i.select(); } }, 450);
+}
+document.querySelectorAll('[data-goto="weightDay"]').forEach((el) => {
+  el.addEventListener('click', goToWeight);
+  el.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); goToWeight(); } });
+});
 
 // ---------- 체중·음주 입력 ----------
 let formDirty = false;
