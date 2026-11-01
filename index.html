@@ -137,15 +137,8 @@
   .go:focus-visible { outline: 2px solid var(--violet); outline-offset: 3px; }
   .tile.go::after { content: '체중 입력 ›'; display: block; margin-top: 6px; font-size: 11px; color: var(--accent); }
   .badge.go::after { content: '눌러서 체중 입력 ›'; display: block; margin-top: 2px; font-size: 11px; opacity: .85; }
-  .wt-box.flash { outline: 3px solid var(--blue); outline-offset: 3px; }
 
   /* 일자별 체중 */
-  .wt-box { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; padding: 12px 14px; border-radius: 14px; background: color-mix(in srgb, var(--blue) 10%, var(--panel)); border: 1px solid color-mix(in srgb, var(--blue) 28%, var(--line)); }
-  .wt-now b { font-size: 26px; font-variant-numeric: tabular-nums; }
-  .wt-diff { font-size: 13px; }
-  .wt-form { margin-left: auto; display: flex; flex-wrap: wrap; gap: 6px; }
-  .wt-form input { width: 120px; padding: 9px 10px; border: 1px solid var(--line); border-radius: 10px; background: var(--panel); }
-  .wt-form .add-w { border: 0; border-radius: 10px; padding: 0 14px; background: var(--blue); color: var(--on-accent); font-weight: 700; cursor: pointer; white-space: nowrap; min-height: 38px; }
   tr.miss td { color: var(--muted); }
 
   /* 달력 */
@@ -230,7 +223,7 @@
       <h1>용민혁명 시즌3</h1>
       <p class="take">2026.10.31 시작 · 시작 대비 <b id="takeChange">—</b> kg · 이번 주 운동 <b id="takeDays">—</b>일</p>
     </div>
-    <div class="badge go" data-goto="weightDay" role="button" tabindex="0" aria-label="현재 체중, 누르면 체중 입력으로 이동">
+    <div class="badge go" data-goto="weightEntry" role="button" tabindex="0" aria-label="현재 체중, 누르면 체중 입력으로 이동">
       <div class="lbl">현재 체중</div>
       <div class="num"><span id="heroCurrent">—</span><small>kg</small></div>
     </div>
@@ -322,32 +315,10 @@
   <h2 class="sec-title">⚖️ 체중 · 음주</h2>
 
   <section class="tiles">
-    <div class="tile c-violet go" data-goto="weightDay" role="button" tabindex="0" aria-label="시작 체중, 누르면 체중 입력으로 이동"><div class="lbl-row"><span class="ico">⚖️</span>시작 체중</div><div class="big"><span id="tStart">—</span><span class="unit">kg</span></div><div class="sub">2026.10.31</div></div>
-    <div class="tile c-blue go" data-goto="weightDay" role="button" tabindex="0" aria-label="현재 체중, 누르면 체중 입력으로 이동"><div class="lbl-row"><span class="ico">🎯</span>현재 체중</div><div class="big"><span id="tCurrent">—</span><span class="unit">kg</span></div><div class="sub"><span id="tLastDate">—</span> 측정</div></div>
-    <div class="tile c-teal go" data-goto="weightDay" role="button" tabindex="0" aria-label="시작 대비, 누르면 체중 입력으로 이동"><div class="lbl-row"><span class="ico">📉</span>시작 대비</div><div class="big"><span id="tChange">—</span><span class="unit">kg</span></div><div class="sub">체중 기록 <span id="tRecords">—</span>회</div></div>
+    <div class="tile c-violet go" data-goto="weightEntry" role="button" tabindex="0" aria-label="시작 체중, 누르면 체중 입력으로 이동"><div class="lbl-row"><span class="ico">⚖️</span>시작 체중</div><div class="big"><span id="tStart">—</span><span class="unit">kg</span></div><div class="sub">2026.10.31</div></div>
+    <div class="tile c-blue go" data-goto="weightEntry" role="button" tabindex="0" aria-label="현재 체중, 누르면 체중 입력으로 이동"><div class="lbl-row"><span class="ico">🎯</span>현재 체중</div><div class="big"><span id="tCurrent">—</span><span class="unit">kg</span></div><div class="sub"><span id="tLastDate">—</span> 측정</div></div>
+    <div class="tile c-teal go" data-goto="weightEntry" role="button" tabindex="0" aria-label="시작 대비, 누르면 체중 입력으로 이동"><div class="lbl-row"><span class="ico">📉</span>시작 대비</div><div class="big"><span id="tChange">—</span><span class="unit">kg</span></div><div class="sub">체중 기록 <span id="tRecords">—</span>회</div></div>
     <div class="tile c-red"><div class="lbl-row"><span class="ico">🍺</span>이번 달 음주</div><div class="big"><span id="tDrinkMonth">—</span><span class="unit">회</span></div><div class="sub">월별 횟수는 아래 그래프에 있어요</div></div>
-  </section>
-
-  <section class="card c-blue" id="weightDay">
-    <h2><span class="ico">⚖️</span>일자별 체중 입력</h2>
-    <p class="note">날짜를 고르고 그날 체중을 매일 입력하세요. 같은 날 다시 저장하면 고쳐 써요.</p>
-    <div class="wo-date">
-      <button class="chip" data-shift="-1">◀ 전날</button>
-      <button class="chip" data-shift="0">오늘</button>
-      <button class="chip" data-shift="1">다음날 ▶</button>
-      <span class="sub" id="wtDateLabel"></span>
-    </div>
-    <div class="wt-box">
-      <span class="wo-name"><span class="ico">⚖️</span>이날 체중</span>
-      <span class="wt-now"><b id="dayWeight">—</b> kg</span>
-      <span class="wt-diff" id="dayDiff"></span>
-      <span class="wt-form editor">
-        <input type="number" id="inWeight" step="0.01" min="30" max="200" placeholder="예: 85.40" aria-label="이날 체중 kg">
-        <button class="add-w" id="addWeight">체중 저장</button>
-        <button class="chip" id="clearWeight">지우기</button>
-      </span>
-    </div>
-    <div class="toast" id="wtToast"></div>
   </section>
 
   <div class="grid2">
@@ -516,7 +487,7 @@ function setWoDate(d) {
   if (typeof mondayOf === 'function') wkStart = mondayOf(d);
   renderWorkoutDay(); renderCalendar(); renderDaily();
   if (typeof renderAttend === 'function') { renderAttend(); renderStatusButtons(); }
-  renderTiles(); renderExStats(); renderExTable(); renderWeightBox();
+  renderTiles(); renderExStats(); renderExTable();
 }
 
 // ---------- 운동별 요약 · 목록 ----------
@@ -836,19 +807,6 @@ function renderTable() {
 }
 
 // ---------- 일자별 체중 ----------
-function prevWeightBefore(date) { const list = weights().filter((r) => r.date < date); return list.length ? list[list.length - 1] : null; }
-function renderWeightBox() {
-  $('wtDateLabel').textContent = label(woDate) + (woDate === todayStr() ? ' · 오늘' : '');
-  const cur = state.days[woDate] && state.days[woDate].weight != null ? Number(state.days[woDate].weight) : null;
-  $('dayWeight').textContent = cur == null ? '—' : fmt2(cur);
-  const prev = prevWeightBefore(woDate), diff = $('dayDiff');
-  if (cur == null) { diff.textContent = state.loaded.days ? '아직 입력하지 않았어요' : ''; diff.style.color = 'var(--muted)'; }
-  else if (!prev) { diff.textContent = '시즌 첫 체중이에요'; diff.style.color = 'var(--muted)'; }
-  else { const dv = Math.round((cur - prev.weight) * 100) / 100; diff.textContent = '직전 기록(' + dot(prev.date).slice(5) + ') 대비 ' + signed(dv) + ' kg'; diff.style.color = colorOf(dv) || 'var(--muted)'; }
-  const input = $('inWeight');
-  if (document.activeElement !== input) input.value = cur == null ? '' : cur;
-  $('clearWeight').hidden = cur == null || woDate === START_DATE;
-}
 function renderWeightLog() {
   const w = weights(), map = {}; w.forEach((r) => { map[r.date] = r.weight; });
   const base = w.length ? w[0].weight : START_WEIGHT, today = todayStr();
@@ -877,47 +835,21 @@ function renderWeightLog() {
       if (i === 3 && r.ds != null) td.style.color = colorOf(r.ds);
       tr.appendChild(td);
     });
-    tr.addEventListener('click', () => { setWoDate(r.d); loadDayForm(r.d); $('weightDay').scrollIntoView({ behavior: 'smooth' }); $('inWeight').focus({ preventScroll: true }); });
+    tr.addEventListener('click', () => { setWoDate(r.d); loadDayForm(r.d); $('weightEntry').scrollIntoView({ behavior: 'smooth' }); $('fWeight').focus({ preventScroll: true }); });
     tb.appendChild(tr);
   });
 }
-async function saveWeight() {
-  if (!store || !state.canWrite) return toastIn('wtToast', '보기 전용이라 저장할 수 없어요.', true);
-  const date = woDate, w = num($('inWeight').value);
-  if (w == null || w < 30 || w > 200) return toastIn('wtToast', '체중을 30~200kg 사이로 넣어 주세요.', true);
-  const cur = { drink: false, note: '', ...(state.days[date] || {}), weight: w };
-  const btn = $('addWeight'); btn.disabled = true;
-  try {
-    await store.doc('days/' + date).set(cur);
-    const ws = weights(), ch = ws.length ? Math.round((ws[ws.length - 1].weight - ws[0].weight) * 100) / 100 : 0;
-    toastIn('wtToast', label(date) + ' 체중 ' + fmt2(w) + 'kg 저장! 시작 대비 ' + signed(ch) + 'kg');
-  } catch (e) { writeFailed(e, 'wtToast'); }
-  btn.disabled = false;
-}
-async function clearWeight() {
-  if (!store || !state.canWrite) return;
-  const date = woDate;
-  if (date === START_DATE) return toastIn('wtToast', '시작 체중은 지울 수 없어요. 숫자를 바꿔 저장해 주세요.', true);
-  const cur = { ...(state.days[date] || {}) }; delete cur.weight;
-  try {
-    const ref = store.doc('days/' + date);
-    if (!cur.drink && !cur.note && !cur.status) await ref.delete(); else await ref.set(cur);
-    toastIn('wtToast', label(date) + ' 체중 기록을 지웠어요.');
-  } catch (e) { writeFailed(e, 'wtToast'); }
-}
-$('addWeight').addEventListener('click', saveWeight);
-$('clearWeight').addEventListener('click', clearWeight);
-$('inWeight').addEventListener('keydown', (e) => { if (e.key === 'Enter') saveWeight(); });
 
 // ---------- 체중 버튼 → 체중 입력으로 이동 ----------
 function goToWeight() {
-  if (woDate !== todayStr() && todayStr() >= START_DATE) setWoDate(todayStr());
-  const target = $('weightDay'), box = target.querySelector('.wt-box');
+  const today = todayStr();
+  if (today >= START_DATE) { setWoDate(today); loadDayForm(today); }
+  const target = $('weightEntry');
   target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  box.classList.add('flash'); setTimeout(() => box.classList.remove('flash'), 1500);
-  setTimeout(() => { const i = $('inWeight'); if (i && i.offsetParent !== null) { i.focus({ preventScroll: true }); i.select(); } }, 450);
+  target.classList.add('flash'); setTimeout(() => target.classList.remove('flash'), 1500);
+  setTimeout(() => { const i = $('fWeight'); if (i && i.offsetParent !== null) { i.focus({ preventScroll: true }); i.select(); } }, 450);
 }
-document.querySelectorAll('[data-goto="weightDay"]').forEach((el) => {
+document.querySelectorAll('[data-goto="weightEntry"]').forEach((el) => {
   el.addEventListener('click', goToWeight);
   el.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); goToWeight(); } });
 });
@@ -957,7 +889,7 @@ $('saveBtn').addEventListener('click', async () => {
 // ---------- 화면 ----------
 function setReadOnly(ro) { state.canWrite = !ro; $('app').classList.toggle('readonly', ro); }
 function renderAll() {
-  renderTiles(); renderExStats(); renderExTable(); renderWorkoutDay(); renderAttend(); renderStatusButtons(); renderCalendar(); renderTable(); renderDaily(); renderWeightBox(); renderWeightChart(); renderWeightLog(); renderDrinkChart();
+  renderTiles(); renderExStats(); renderExTable(); renderWorkoutDay(); renderAttend(); renderStatusButtons(); renderCalendar(); renderTable(); renderDaily(); renderWeightChart(); renderWeightLog(); renderDrinkChart();
   if (!formDirty && document.activeElement?.closest?.('#weightEntry') == null) loadDayForm($('fDate').value || woDate);
 }
 let rt; window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => { renderDaily(); renderWeightChart(); renderDrinkChart(); }, 150); });
