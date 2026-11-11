@@ -1028,7 +1028,7 @@ function loadDb() {
     } catch (e) {}
   }
   d.days = d.days || {}; d.sessions = d.sessions || {};
-  if (!d.days[START_DATE]) d.days[START_DATE] = { weight: START_WEIGHT, drink: true, note: '시작 체중 (체중계 사진)' };
+  if (!d.days[START_DATE]) d.days[START_DATE] = { weight: START_WEIGHT, drink: false, note: '시작 체중 (체중계 사진)' };
   return d;
 }
 let db = loadDb();
